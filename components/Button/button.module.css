@@ -1,19 +1,23 @@
 button.main {
-    border: 0;
-    background: none;
-    display: flex;
-    
-    margin: 20px auto;
-    text-align: center;
-    border: 2px solid #2ecc71;
-    padding: 14px 40px;
-    outline: none;
-    color: white;
-    border-radius: 10px;
-    transition: 0.25s;
-    cursor: pointer
+  border: 0;
+  background: none;
+  display: flex;
+  background-color: var(--pink);
+
+  margin-top: 20px;
+  text-align: center;
+  padding: 14px 40px;
+  outline: none;
+  border-radius: 10px;
+  transition: 0.25s;
+  cursor: pointer;
+  -webkit-box-shadow: 5px 5px 15px -4px rgba(0, 0, 0, 0.41);
+  box-shadow: 5px 5px 15px -4px rgba(0, 0, 0, 0.41);
+
+  color: white;
+  font-weight: bold;
 }
 
 button.main:hover {
-    background: #2ecc71
+  background: #2ecc71;
 }

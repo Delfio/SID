@@ -3,6 +3,7 @@ import Head from "next/head";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Wrapper from "../components/Wrapper";
+import SocialLinks from "../components/SocialLinks";
 
 export default function Home() {
   const [login, setLogin] = React.useState("");
@@ -14,10 +15,19 @@ export default function Home() {
 
   function handleLogin() {
     setLoading(true);
+    const handle = () => {
+      return new Promise((resolv, reject) => {
+        setTimeout(() => {
+          resolv()
+        }, 2000)
+      })
+    }
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    setLoading(true)
+    handle().then(() => {
+      setLoading(false)
+      setPinValido(old => !old)
+    })
     // setPinValido((old) => !old);
   }
 
@@ -47,35 +57,16 @@ export default function Home() {
           onChange={(e) => console.log(e)}
           placehold="Password"
         />
-        <a className="forgot text-muted" href="#">
-          Esqueceu sua senha?
-        </a>
-        <input
-          type="submit"
-          onClick={handleLogin}
-          name=""
-          value="Entrar"
-          href="#"
-        />
-        <div className="col-md-12">
-          <ul className="social-network social-circle">
-            <li>
-              <a href="#" className="icoFacebook" title="Facebook">
-                <i className="fab fa-facebook-f"></i>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="icoTwitter" title="Twitter">
-                <i className="fab fa-twitter"></i>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="icoGoogle" title="Google +">
-                <i className="fab fa-google-plus"></i>
-              </a>
-            </li>
-          </ul>
-        </div>
+        
+        <Button label="Entrar" onClick={handleLogin} />
+        <section style={{
+          padding: 20
+        }}>
+          <a className="forgot text-muted" href="#">
+            Esqueceu sua senha?
+          </a>
+        </section>
+        <SocialLinks />
       </>
     );
   };

@@ -2,21 +2,37 @@ input.main {
     border: 0;
     background: none;
     display: block;
-    margin: 20px auto;
     text-align: center;
-    border: 2px solid #3498db;
+    border-bottom: 1px solid #021a29;
     padding: 10px 10px;
     width: 250px;
     outline: none;
-    color: white;
-    border-radius: 10px;
+    color: black;
     transition: 0.25s
 }
 
+input.main:last-of-type {
+    margin-bottom: 20px;
+}
+
+input.main + input.main {
+    margin-top: 20px !important;
+}
+
 input.main:focus {
-    border-color: #2ecc71;
+    border-color: #1f75aa;
+    width: 300px;
 }
 
 .main.error {
     border-color: #c53030 !important;
 }
+
+
+@media (max-width: 720px) {
+    input.main {
+        text-align: left;
+        width: 300px;
+    }
+  }
+  
