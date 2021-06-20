@@ -1,0 +1,38 @@
+.main {
+    width: 500px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    background: #191919;
+    text-align: center;
+    transition: 0.25s;
+    border-radius: 15px;
+    
+}
+
+.titleWrapper {
+    display: flex;
+    height: 30%;
+    justify-content: center;
+    
+    color: white;
+    font-weight: bold;
+    background-color: red;
+}
+
+
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 720px) {
+    .main {
+        min-height: 500px;
+    }
+  }
