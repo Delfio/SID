@@ -1,10 +1,11 @@
 import React from "react";
 import Head from "next/head";
+import { useRouter } from 'next/router';
+
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Wrapper from "../components/Wrapper";
 import SocialLinks from "../components/SocialLinks";
-
 import useToast from '../hooks/Toas';
 
 
@@ -15,8 +16,8 @@ export default function Home() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [pinValido, setPinValido] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [device, setDevice] = React.useState('desktop');
 
+  const router = useRouter();
   const {showToast, handleDevide} = useToast();
 
 
@@ -74,7 +75,7 @@ export default function Home() {
           placehold="Password"
         />
         
-        <Button label="Entrar" onClick={handleLogin} />
+        <Button label="Entrar" onClick={() => router.push('/social-card?user_id=asdfasdfasdfasdfasdfasdf')} />
         <section style={{
           padding: 20
         }}>
