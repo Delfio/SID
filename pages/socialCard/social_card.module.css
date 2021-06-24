@@ -1,86 +1,145 @@
 .container {
-    position: relative;
-    display: flex;
-    padding: 20px 60px;
-    background-color: red;
-    box-sizing: border-box;
-    overflow: hidden;
+  position: relative;
 
-    width: 100vw;
-    height: 100vh;
+  display: flex;
+  padding: 20px 60px;
+  overflow-y: scroll;
 
-    align-items: center;
-    justify-content: center;
+  /* background-color: red; */
+  /* box-sizing: border-box; */
+
+  width: 100vw;
+  height: 100vh;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.container::-webkit-scrollbar{
+  display: none;
 }
 
 .main {
-    /* position: absolute; */
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    border-radius: 26px;
-    padding: 40px;
+  /* position: absolute; */
+  width: 100%;
+  height: auto;
 
-    -webkit-box-shadow: 5px -2px 5px 3px rgba(0,0,0,0.2); 
-    box-shadow: 5px -2px 5px 3px rgba(0,0,0,0.2);
+  max-height: 1050px;
+  max-width: 500px;
+
+  background-color: white;
+  border-radius: 26px;
+  padding: 40px;
+  overflow-y: scroll;
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  -webkit-box-shadow: 5px -2px 5px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px -2px 5px 3px rgba(0, 0, 0, 0.2);
+}
+
+.main::-webkit-scrollbar {
+  display: none;
 }
 
 .WrapperImgProfile {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 }
 
 .ContainerImgProfile {
-    width: 150px;
-    height: 150px;
-    overflow: hidden;
-    border-radius: 50%;
-    background-color: white;
-    border: 3px solid white;
-    -webkit-box-shadow: -2px -2px 9px 5px rgba(0,0,0,0.3); 
-    box-shadow: -2px -2px 9px 5px rgba(0,0,0,0.3);
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: white;
+  border: 3px solid white;
+  -webkit-box-shadow: -2px -2px 9px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: -2px -2px 9px 5px rgba(0, 0, 0, 0.3);
 }
 
 .ContainerName {
-    display: flex;
-    width: 100%;
-    
-    /* background-color: red; */
-    padding: 20px 0;
-    justify-content: center;
+  display: flex;
+  width: 100%;
 
-    font-family: 'Roboto', sans-serif;
+  padding: 20px 0;
+  justify-content: center;
+
+  font-family: "Roboto", sans-serif;
 }
 
 .ContainerName input {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: var(--gray-500) !important;
-    text-align: center !important;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--gray-500) !important;
+  text-align: center !important;
 }
 
 .ContainerInfos {
-    display: flex;
-    flex-direction: column;
-    background-color: red;
+  display: flex;
+  flex-direction: column;
+  /* background-color: red; */
+  justify-content: center;
+  align-items: center;
+  /* padding-bottom: 130px; */
 }
 
 .ContainerInfos input {
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: var(--gray-500) !important;
-    text-align: center !important;
+  padding: 10px;
+}
+
+.ContainerInfos div input {
+  margin-top: 10px;
+}
+
+.ContainerButtons {
+  margin-top: 10px;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ShareLinksWrapper {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ShareLinksWrapper section {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
+}
+
+.SaveButtonWrapper {
+  flex: 2;
+  display: flex;
+  flex-direction: row;
+
+  align-items: flex-start;
 }
 
 @media (max-width: 720px) {
-    .container {
-        padding: 40px 0 0;
-    }
-
-    .main {
-        border-radius: 30px 30px 0 0;
-    }
+  .container {
+    padding: 40px 0 0;
   }
-  
+
+  .main {
+    border-radius: 30px 30px 0 0;
+    height: 100%;
+    padding-bottom: 100px;
+  }
+}
+
+@media (max-width: 640px) {
+  .SaveButtonWrapper button {
+    font-size: 1rem;
+  }
+}

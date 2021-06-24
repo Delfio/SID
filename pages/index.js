@@ -75,7 +75,7 @@ export default function Home() {
           placehold="Password"
         />
         
-        <Button label="Entrar" onClick={() => router.push('/social-card?user_id=asdfasdfasdfasdfasdfasdf')} />
+        <Button label="Entrar" onClick={() => router.push('/socialCard/idkskksksksksk')} />
         <section style={{
           padding: 20
         }}>
