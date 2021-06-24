@@ -6,7 +6,7 @@
   overflow-y: scroll;
 
   /* background-color: red; */
-  /* box-sizing: border-box; */
+  box-sizing: border-box !important;
 
   width: 100vw;
   height: 100vh;
@@ -24,7 +24,7 @@
   width: 100%;
   height: auto;
 
-  max-height: 1050px;
+  max-height: 100%;
   max-width: 500px;
 
   background-color: white;
