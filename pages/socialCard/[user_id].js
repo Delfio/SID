@@ -5,10 +5,35 @@ import SocialCardStyle from "./social_card.module.css";
 import Input from "../../components/Input";
 import { Fab, Action } from "react-tiny-fab";
 import SocialLinksModules from "../../components/SocialLinks/socialLinks.module.css";
+import useToast from '../../hooks/Toas';
 
 export default function SocialCard() {
   const router = useRouter();
   const { user_id } = router.query;
+
+  const {showToast, handleDevide} = useToast();
+
+  const handleSave = React.useCallback(() => {
+    showToast({
+      type: 'success',
+      message: 'perfil salvo com suucesso'
+    });
+  }, [showToast]);
+
+  React.useEffect(() => {
+    function converterTipoDeDispositivo(){
+      handleDevide({
+        device: navigator.maxTouchPoints
+      });
+    }
+
+    window.addEventListener('resize', (_) => {
+      converterTipoDeDispositivo()
+    });
+
+    converterTipoDeDispositivo()
+
+  }, [handleDevide]);
 
   return (
     <>
@@ -117,14 +142,14 @@ export default function SocialCard() {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Whats"
-                aria-label="Whats"
+                placeholder="Whatsapp"
+                aria-label="Whatsapp"
               />
             </div>
           </section>
           <section className={SocialCardStyle.ContainerButtons}>
             <div className={SocialCardStyle.SaveButtonWrapper}>
-              <button type="button" className="btn btn-primary btn-lg">
+              <button onClick={handleSave} type="button" className="btn btn-primary btn-lg">
                 Salvar alterações
               </button>
             </div>

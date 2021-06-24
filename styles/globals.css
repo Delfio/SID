@@ -54,6 +54,8 @@ a {
   justify-content: center;
   align-items: center;
   position: relative;
+
+  background: url('/img/bg-principal.png') no-repeat center center;
 }
 
 /* Acessbilidade de fontes */
