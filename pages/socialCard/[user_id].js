@@ -18,7 +18,9 @@ export default function SocialCard() {
       type: 'success',
       message: 'perfil salvo com suucesso'
     });
-  }, [showToast]);
+
+    router.push('/card/useridlllaopoomskdlmjfi')
+  }, [showToast, router]);
 
   React.useEffect(() => {
     function converterTipoDeDispositivo(){
