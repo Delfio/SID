@@ -70,10 +70,11 @@
   font-family: "Roboto", sans-serif;
 }
 
+
 .ContainerName input {
   font-size: 1.8rem;
   font-weight: bold;
-  color: var(--gray-500) !important;
+  color: white !important;
   text-align: center !important;
 }
 

@@ -7,7 +7,10 @@ import { Fab, Action } from "react-tiny-fab";
 import useToast from "../../hooks/Toas";
 
 export default function SocialCard() {
+  const [bg, setBg] = React.useState(1);
+
   const router = useRouter();
+  
   const { user_id } = router.query;
 
   const { showToast, handleDevide } = useToast();
@@ -20,6 +23,13 @@ export default function SocialCard() {
 
     router.push("/card/useridlllaopoomskdlmjfi");
   }, [showToast, router]);
+
+  const handleAlterBG = React.useCallback(() => {
+    setBg(oldBg => {
+      if(oldBg === 6) return 1;
+      return oldBg + 1;
+    })
+  }, []);
 
   React.useEffect(() => {
     function converterTipoDeDispositivo() {
@@ -52,12 +62,15 @@ export default function SocialCard() {
               backgroundColor: "#00A2DC",
             }}
             text="Mudar Background"
-            onClick={() => console.log("")}
+            onClick={handleAlterBG}
           >
             <i className="fas fa-copy"></i>
           </Action>
         </Fab>
-        <div className={SocialCardStyle.main}>
+        <div className={SocialCardStyle.main} style={{
+          background: `url('/img/bg-cards/layout${bg}.png') no-repeat`,
+          backgroundSize: 'contain'
+        }}>
           <section className={SocialCardStyle.WrapperImgProfile}>
             <div className={SocialCardStyle.ContainerImgProfile}>
               <Image

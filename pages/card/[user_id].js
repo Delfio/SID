@@ -88,7 +88,12 @@ export default function Card() {
           <button className="input-group mb-3">
             <div className={CardStyle.wrapperSocialInfo}>
               <div className={CardStyle.wrapperIcon}>
-                <Image width="45px" height="45px" src="/img/pix-logo.png" />
+                <Image 
+                  alt="img-pix"
+                  width="45px" 
+                  height="45px" 
+                  src="/img/pix-logo.png" 
+                />
               </div>
               <div className={CardStyle.wrapperButton}>Copiar a chave pix</div>
             </div>
