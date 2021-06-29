@@ -33,74 +33,142 @@ export default function Card() {
           <h2>Delfio Francisco Dutra Teixeira</h2>
         </section>
         <section className={SocialCardStyle.ContainerInfos}>
-          <div className="input-group mb-3">
-            <section className={CardStyle.wrapperSocialCard}>
-              <div
-                className={CardStyle.WrapperSocialCardIcon}
-                style={{
-                  background: 'url("/img/Instagram_icon.png.webp") center',
-                  backgroundSize: "contain",
-                }}
-              ></div>
-              <a
-                href="https://www.instagram.com/jumpman23/?hl=pt-br"
-                target="_blank"
-                className={CardStyle.WrapperSocialCardText}
-                rel="noreferrer"
-              >
-                <p>INSTAGRAM</p>
-              </a>
-            </section>
-          </div>
-          <div className="input-group mb-3">
-            <section className={CardStyle.wrapperSocialCard}>
-              <div
-                className={CardStyle.WrapperSocialCardIcon}
-                style={{
-                  background: 'url("/img/facebook_icon.png") center',
-                  backgroundSize: "contain",
-                }}
-              ></div>
-              <a
-                href="https://www.facebook.com/delfio.francisco.del"
-                target="_blank"
-                className={CardStyle.WrapperSocialCardText}
-                rel="noreferrer"
-              >
-                <p>FACEBOOK</p>
-              </a>
-            </section>
-          </div>
-          <div className="input-group mb-3">
-            <a
-              href="https://www.facebook.com/delfio.francisco.del"
-              target="_blank"
-              className={CardStyle.wrapperQrCode} rel="noreferrer"
-            >
-              <Image
-                src="/img/qr_code_exemplo.png"
-                alt="profile"
-                className="rounded"
-                width="250px"
-                height="250px"
-              />
-            </a>
-          </div>
-          <div className="input-group mb-3">
-            <div className={CardStyle.mapouter}>
-              <div className={CardStyle.gmap_canvas} rel="noreferrer">
-                <iframe
-                  width="100%"
-                  height="250px"
-                  id="gmap_canvas"
-                  src="https://maps.google.com/maps?q=Porto%20Velho%20Rondonia&t=&z=17&ie=UTF8&iwloc=&output=embed"
-                  frameBorder="0"
-                  scrolling="no"
-                  marginHeight="0"
-                  marginWidth="0"
-                ></iframe>
+          <button className="input-group mb-3">
+            <div className={CardStyle.wrapperSocialInfo}>
+              <div className={CardStyle.wrapperIcon}>
+                <i
+                  className="fab fa-facebook-square"
+                  style={{
+                    color: "gray",
+                  }}
+                ></i>
               </div>
+              <div className={CardStyle.wrapperButton}>Facebook</div>
             </div>
+          </button>
+          <button className="input-group mb-3">
+            <div className={CardStyle.wrapperSocialInfo}>
+              <div className={CardStyle.wrapperIcon}>
+                <i
+                  className="fas fa-mobile-alt"
+                  style={{
+                    color: "gray",
+                  }}
+                ></i>
+              </div>
+              <div className={CardStyle.wrapperButton}>Ligar</div>
+            </div>
+          </button>
+          <button className="input-group mb-3">
+            <div className={CardStyle.wrapperSocialInfo}>
+              <div className={CardStyle.wrapperIcon}>
+                <i
+                  className="fab fa-instagram"
+                  style={{
+                    color: "gray",
+                  }}
+                ></i>
+              </div>
+              <div className={CardStyle.wrapperButton}>Instagram</div>
+            </div>
+          </button>
+          <button className="input-group mb-3">
+            <div className={CardStyle.wrapperSocialInfo}>
+              <div className={CardStyle.wrapperIcon}>
+                <i
+                  className="fab fa-whatsapp"
+                  style={{
+                    color: "gray",
+                  }}
+                ></i>
+              </div>
+              <div className={CardStyle.wrapperButton}>Whatsapp</div>
+            </div>
+          </button>
+          <button className="input-group mb-3">
+            <div className={CardStyle.wrapperSocialInfo}>
+              <div className={CardStyle.wrapperIcon}>
+                <Image width="45px" height="45px" src="/img/pix-logo.png" />
+              </div>
+              <div className={CardStyle.wrapperButton}>Copiar a chave pix</div>
+            </div>
+          </button>
+          <button className="input-group mb-3">
+            <div className={CardStyle.wrapperSocialInfo}>
+              <div className={CardStyle.wrapperIcon}>
+                <i
+                  className="fas fa-globe"
+                  style={{
+                    color: "gray",
+                  }}
+                ></i>
+              </div>
+              <div className={CardStyle.wrapperButton}>Nosso site</div>
+            </div>
+          </button>
+
+          <button className="input-group mb-3">
+            <div className={CardStyle.wrapperSocialInfo}>
+              <div className={CardStyle.wrapperIcon}>
+                <i
+                  className="fab fa-tiktok"
+                  style={{
+                    color: "gray",
+                  }}
+                ></i>
+              </div>
+              <div className={CardStyle.wrapperButton}>Tik Tok</div>
+            </div>
+          </button>
+          <button className="input-group mb-3">
+            <div className={CardStyle.wrapperSocialInfo}>
+              <div className={CardStyle.wrapperIcon}>
+                <i
+                  className="fas fa-map-marker-alt"
+                  style={{
+                    color: "gray",
+                  }}
+                ></i>
+              </div>
+              <div className={CardStyle.wrapperButton}>Nosso Endereço</div>
+            </div>
+          </button>
+          <button className="input-group mb-3">
+            <div className={CardStyle.wrapperSocialInfo}>
+              <div className={CardStyle.wrapperIcon}>
+                <i
+                  className="fab fa-youtube"
+                  style={{
+                    color: "gray",
+                  }}
+                ></i>
+              </div>
+              <div className={CardStyle.wrapperButton}>Youtube</div>
+            </div>
+          </button>
+          <button className="input-group mb-3">
+            <div className={CardStyle.wrapperSocialInfo}>
+              <div className={CardStyle.wrapperIcon}>
+                <i
+                  className="fas fa-envelope"
+                  style={{
+                    color: "gray",
+                  }}
+                ></i>
+              </div>
+              <div className={CardStyle.wrapperButton}>E-mail</div>
+            </div>
+          </button>
+        </section>
+        <section className={CardStyle.wrapperLogoSid}>
+          <div className={CardStyle.logoImg}>
+            <Image
+              src="/img/logo.png"
+              alt="logo"
+              // className="rounded mx-auto d-block"
+              width="auto"
+              height="auto"
+            />
           </div>
         </section>
       </div>

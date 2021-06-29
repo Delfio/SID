@@ -4,37 +4,35 @@ import { useRouter } from "next/router";
 import SocialCardStyle from "./social_card.module.css";
 import Input from "../../components/Input";
 import { Fab, Action } from "react-tiny-fab";
-import SocialLinksModules from "../../components/SocialLinks/socialLinks.module.css";
-import useToast from '../../hooks/Toas';
+import useToast from "../../hooks/Toas";
 
 export default function SocialCard() {
   const router = useRouter();
   const { user_id } = router.query;
 
-  const {showToast, handleDevide} = useToast();
+  const { showToast, handleDevide } = useToast();
 
   const handleSave = React.useCallback(() => {
     showToast({
-      type: 'success',
-      message: 'perfil salvo com suucesso'
+      type: "success",
+      message: "perfil salvo com suucesso",
     });
 
-    router.push('/card/useridlllaopoomskdlmjfi')
+    router.push("/card/useridlllaopoomskdlmjfi");
   }, [showToast, router]);
 
   React.useEffect(() => {
-    function converterTipoDeDispositivo(){
+    function converterTipoDeDispositivo() {
       handleDevide({
-        device: navigator.maxTouchPoints
+        device: navigator.maxTouchPoints,
       });
     }
 
-    window.addEventListener('resize', (_) => {
-      converterTipoDeDispositivo()
+    window.addEventListener("resize", (_) => {
+      converterTipoDeDispositivo();
     });
 
-    converterTipoDeDispositivo()
-
+    converterTipoDeDispositivo();
   }, [handleDevide]);
 
   return (
@@ -53,28 +51,10 @@ export default function SocialCard() {
             style={{
               backgroundColor: "#00A2DC",
             }}
-            text="Copiar URL"
+            text="Mudar Background"
             onClick={() => console.log("")}
           >
             <i className="fas fa-copy"></i>
-          </Action>
-          <Action
-            style={{
-              backgroundColor: "#00A2DC",
-            }}
-            text="Preview"
-            onClick={() => console.log("")}
-          >
-            <i className="fas fa-file-image"></i>
-          </Action>
-          <Action
-            style={{
-              backgroundColor: "#00A2DC",
-            }}
-            text="Suporte"
-            onClick={() => console.log("")}
-          >
-            <i className="fas fa-info-circle"></i>
           </Action>
         </Fab>
         <div className={SocialCardStyle.main}>
@@ -104,8 +84,8 @@ export default function SocialCard() {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Endereço"
-                aria-label="Endereço"
+                placeholder="Facebook"
+                aria-label="Facebook"
               />
             </div>
             <div className="input-group mb-3">
@@ -113,23 +93,7 @@ export default function SocialCard() {
                 type="text"
                 className="form-control"
                 placeholder="Telefone"
-                aria-label="Telefone"
-              />
-            </div>
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Site"
-                aria-label="Site"
-              />
-            </div>
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Facebook"
-                aria-label="Facebook"
+                aria-label="Telfone"
               />
             </div>
             <div className="input-group mb-3">
@@ -148,34 +112,72 @@ export default function SocialCard() {
                 aria-label="Whatsapp"
               />
             </div>
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Pix"
+                aria-label="Pix"
+              />
+            </div>
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Site"
+                aria-label="Site"
+              />
+            </div>
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Nosso Site"
+                aria-label="Nosso Site"
+              />
+            </div>
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Tik Tok"
+                aria-label="Tik Tok"
+              />
+            </div>
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Endereço"
+                aria-label="Endereço"
+              />
+            </div>
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Youtube"
+                aria-label="Youtube"
+              />
+            </div>
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Email"
+                aria-label="Email"
+              />
+            </div>
           </section>
           <section className={SocialCardStyle.ContainerButtons}>
             <div className={SocialCardStyle.SaveButtonWrapper}>
-              <button onClick={handleSave} type="button" className="btn btn-primary btn-lg">
+              <button
+                onClick={handleSave}
+                type="button"
+                className="btn btn-primary btn-lg"
+              >
                 Salvar alterações
               </button>
-            </div>
-            <div className={SocialCardStyle.ShareLinksWrapper}>
-              <section>
-                <a
-                  className={SocialLinksModules.wrapperSocial}
-                  style={{
-                    background: "#1354AB",
-                    color: "white",
-                  }}
-                >
-                  <i className="fab fa-facebook-f"></i>
-                </a>
-                <a
-                  className={SocialLinksModules.wrapperSocial}
-                  style={{
-                    background: "#34af23 ",
-                    color: "white",
-                  }}
-                >
-                  <i className="fab fa-whatsapp"></i>
-                </a>
-              </section>
             </div>
           </section>
         </div>
