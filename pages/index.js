@@ -9,9 +9,191 @@ import SocialLinks from "../components/SocialLinks";
 import useToast from "../hooks/useToast";
 import useAuth from "../hooks/useAuth";
 
+const FormLoginInputs = ({
+  handleLogin,
+  handleRegister,
+  handleFacebookAuth,
+  handleGoogleAuth,
+  handleForgotPassword,
+  register = false,
+}) => {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [remenberCredentials, setRemenberCredentials] = React.useState(false);
+  const [formState, setFormState] = React.useState("login");
+
+  const Register = React.useMemo(
+    () => (
+      <div className="form-group mb-3">
+        <label htmlFor="cfg-pwd">Confirmar sua senha: </label>
+        <input
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          type="password"
+          className="form-control"
+          id="cfg-pwd"
+        />
+      </div>
+    ),
+    [confirmPassword]
+  );
+
+  const handleChangeForm = React.useCallback(() => {
+    if (formState === "login" && !register) return;
+
+    setFormState((old) => (old === "login" ? "register" : "login"));
+  }, [formState, register]);
+
+  const handleSubmit = React.useCallback(() => {
+    if (formState === "login") {
+      const sucess = handleLogin({
+        email,
+        password,
+      });
+
+      console.log(sucess);
+      if (sucess) {
+        if (remenberCredentials && email && password) {
+          localStorage.setItem(
+            "@seja-sid",
+            JSON.stringify({
+              remenberItens: {
+                email,
+                password,
+              },
+            })
+          );
+        }
+      }
+
+      return;
+    }
+
+    const sucess = handleRegister({
+      email,
+      password,
+      confirmPassword,
+    });
+
+    if (sucess) {
+      if (remenberCredentials && email && password) {
+        localStorage.setItem(
+          "@seja-sid",
+          JSON.stringify({
+            remenberItens: {
+              email,
+              password,
+            },
+          })
+        );
+      }
+    }
+  }, [
+    confirmPassword,
+    email,
+    formState,
+    handleLogin,
+    handleRegister,
+    password,
+    remenberCredentials,
+  ]);
+
+  React.useEffect(() => {
+    const itens = localStorage.getItem("@seja-sid");
+
+    if (itens) {
+      const { remenberItens } = JSON.parse(itens);
+
+      const { email, password } = remenberItens;
+      setEmail(email);
+      setPassword(password);
+    }
+  }, []);
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        padding: "10px 30px",
+        textAlign: "left",
+      }}
+    >
+      <div className="form-group mb-3">
+        <label htmlFor="email">Endereço de email:</label>
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          className="form-control"
+          id="email"
+        />
+      </div>
+      <div className="form-group mb-3">
+        <label htmlFor="pwd">Sua senha: </label>
+        <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          className="form-control"
+          id="pwd"
+        />
+      </div>
+      {formState === "register" && Register}
+      <div className="checkbox">
+        <label>
+          <input
+            value={remenberCredentials}
+            onChange={(_) => setRemenberCredentials((old) => !old)}
+            type="checkbox"
+          />{" "}
+          Lembrar credênciais
+        </label>
+      </div>
+      <div
+        className="d-grid gap-2"
+        style={{
+          width: "100%",
+          padding: 20,
+        }}
+      >
+        <button className="btn btn-primary btn-lg" onClick={handleSubmit}>
+          Enviar
+        </button>
+        {register && (
+          <button
+            className="btn btn-secondary btn-lg"
+            onClick={handleChangeForm}
+          >
+            {formState === "register" ? "Voltar" : "Registrar-se"}
+          </button>
+        )}
+        <button onClick={handleFacebookAuth} className="fb btn">
+          <i className="fab fa-facebook-f"></i> Entrar com facebook
+        </button>
+        <button onClick={handleGoogleAuth} className="google btn">
+          <i className="fab fa-google"></i> Entrar com google
+        </button>
+        <section
+          style={{
+            padding: 20,
+            textAlign: "center",
+          }}
+        >
+          <button
+            onClick={handleForgotPassword}
+            className="forgot text-muted"
+            href="#"
+          >
+            Esqueceu sua senha?
+          </button>
+        </section>
+      </div>
+    </div>
+  );
+};
+
 export default function Home() {
-  const [loginError, setLoginError] = React.useState(false);
-  const [passwordError, setPasswordError] = React.useState(false);
   const [pinError, setPinError] = React.useState(false);
 
   const [pinUsuario, setPinUsuario] = React.useState("");
@@ -20,11 +202,12 @@ export default function Home() {
   const [pinValido, setPinValido] = React.useState(false);
 
   const inputPinREF = React.useRef(null);
-  const inputEmailREF = React.useRef(null);
-  const inputPasswordREF = React.useRef(null);
-  const inputConfirmPasswordREF = React.useRef(null);
+  const reEmailValidate = React.useMemo(() => {
+    return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  }, []);
 
   const router = useRouter();
+
   const {
     loading,
     signWithEmailAndPassword,
@@ -33,70 +216,8 @@ export default function Home() {
     siginWithFacebook,
     pinValidate,
   } = useAuth();
+
   const { showToast, handleDevide } = useToast();
-
-  // showToast({
-  //   type: 'error',
-  //   message: 'toast ja em uso!'
-  // });
-  // showToast({
-  //   type: 'success',
-  //   message: 'toast validado com sucesso!'
-  // });
-
-  async function handleLogin() {
-    let error = false;
-    const password = inputPasswordREF.current?.value;
-    const email = inputEmailREF.current?.value;
-
-    const reEmailValidate =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    if (password.length < 5) {
-      setPasswordError(true);
-      error = true;
-    }
-
-    if (email.length === 0 || !reEmailValidate.test(email)) {
-      setLoginError(true);
-      error = true;
-    }
-
-    if (error) return;
-
-    if (userId) {
-      signWithEmailAndPassword({
-        email,
-        password,
-        userId,
-      })
-        .then((isValid) => {
-          console.log("logado com sucesso e vinculado");
-        })
-        .catch((err) => {
-          showToast({
-            type: "error",
-            message: "Usuário inválido!",
-          });
-        });
-    } else {
-      registerWithEmailAndPassword({
-        email,
-        password,
-        pin: pinUsuario,
-      })
-        .then((isValid) => {
-          console.log("registrado e vinculado");
-        })
-        .catch((err) => {
-          showToast({
-            type: "error",
-            message: "Usuário inválido!",
-          });
-        });
-    }
-  }
-
   async function handleValidatePin() {
     const pin = inputPinREF.current?.value;
     setPinError(false);
@@ -129,20 +250,150 @@ export default function Home() {
     });
   }
 
+  const handleLogin = React.useCallback(
+    ({ email, password }) => {
+      let error = false;
+
+      if (password.length < 5) {
+        showToast({
+          type: "error",
+          message: "Senha não pode ser menor que 5 digítos",
+        });
+        error = true;
+      }
+
+      if (!reEmailValidate.test(email)) {
+        showToast({
+          type: "error",
+          message: "Formato do e-mail inválido",
+        });
+        error = true;
+      }
+
+      if (error) return false;
+
+      //email, password, userId="", pin
+      return signWithEmailAndPassword({
+        email,
+        password,
+        userId,
+        pin: pinUsuario,
+      })
+        .then((_) => {
+          console.log("logado com sucesso e vinculado");
+          return true;
+        })
+        .catch((err) => {
+          console.log(err.message)
+          showToast({
+            type: "error",
+            message: 'Credênciais inválidas',
+          });
+
+          return false;
+        });
+    },
+    [pinUsuario, reEmailValidate, showToast, signWithEmailAndPassword, userId]
+  );
+
+  const handleRegister = React.useCallback(
+    ({ email, password, confirmPassword }) => {
+      let error = false;
+      if (password.length < 5) {
+        showToast({
+          type: "error",
+          message: "Senha não pode ser menor que 5 digítos",
+        });
+        error = true;
+      }
+
+      if (password !== confirmPassword) {
+        showToast({
+          type: "error",
+          message: "Senhas não conferem",
+        });
+        error = true;
+      }
+
+      if (!reEmailValidate.test(email)) {
+        showToast({
+          type: "error",
+          message: "Formato do e-mail inválido",
+        });
+        error = true;
+      }
+
+      if (error) return false;
+
+      return registerWithEmailAndPassword({
+        email,
+        password,
+        pin: pinUsuario,
+      })
+        .then((isValid) => {
+          console.log("registrado e vinculado");
+          return true;
+        })
+        .catch((err) => {
+          if (
+            err.message ===
+            "The email address is already in use by another account."
+          ) {
+            showToast({
+              type: "error",
+              message: "Essa conta já esta vinculada a um código PIN",
+            });
+          } else {
+            showToast({
+              type: "error",
+              message: "Usuário inválido",
+            });
+          }
+
+          return false;
+        });
+    },
+    [pinUsuario, reEmailValidate, registerWithEmailAndPassword, showToast]
+  );
+
   const handleGoogleAuth = React.useCallback(() => {
-    console.log("asdfgasd");
     siginWithGoogle({
       userId,
-      pin: pinUsuario
+      pin: pinUsuario,
     })
-  }, [siginWithGoogle, userId, pinUsuario]);
+      .then((_) => {
+        console.log("logado com sucesso e vinculado");
+        return true;
+      })
+      .catch((err) => {
+        console.log("asdfasdfse ", err);
+        showToast({
+          type: "error",
+          message: err,
+        });
+
+        return false;
+      });
+  }, [siginWithGoogle, userId, pinUsuario, showToast]);
 
   const handleFacebookAuth = React.useCallback(() => {
     siginWithFacebook({
       userId,
-      pin: pinUsuario
+      pin: pinUsuario,
     })
-  }, [siginWithFacebook, pinUsuario, userId]);
+      .then((_) => {
+        console.log("logado com sucesso e vinculado");
+        return true;
+      })
+      .catch((err) => {
+        showToast({
+          type: "error",
+          message: err,
+        });
+
+        return false;
+      });
+  }, [siginWithFacebook, userId, pinUsuario, showToast]);
 
   const FormInicial = () => {
     return (
@@ -154,43 +405,6 @@ export default function Home() {
           placehold="Pin"
         />
         <Button label="Validar" onClick={handleValidatePin} />
-      </>
-    );
-  };
-
-  const FormLogin = () => {
-    return (
-      <>
-        <Input error={false} ref={inputEmailREF} placehold="E-mail" />
-        <Input
-          error={false}
-          type="password"
-          ref={inputPasswordREF}
-          placehold="Sua senha"
-        />
-        {!userId && (
-          <Input
-            error={false}
-            type="password"
-            ref={inputConfirmPasswordREF}
-            placehold="Confirmar senha"
-          />
-        )}
-
-        <Button label="Entrar" onClick={handleLogin} />
-        <section
-          style={{
-            padding: 20,
-          }}
-        >
-          <a className="forgot text-muted" href="#">
-            Esqueceu sua senha?
-          </a>
-        </section>
-        <SocialLinks
-          onFacebookClick={handleFacebookAuth}
-          onGoogleClick={handleGoogleAuth}
-        />
       </>
     );
   };
@@ -218,16 +432,24 @@ export default function Home() {
       </Head>
       <div className="main">
         <Wrapper title="SID">
-          <p className="text-muted">
-            {userId ? "Entre com suas credênciais" : "Registre sua conta"}
-          </p>
-
           {loading ? (
             <div className="spinner-border text-primary" role="status">
               <span className="visually-hidden">Loading...</span>
             </div>
           ) : (
-            <>{pinValido ? <FormLogin /> : <FormInicial />}</>
+            <>
+              {pinValido ? (
+                <FormLoginInputs
+                  handleLogin={handleLogin}
+                  handleRegister={handleRegister}
+                  handleFacebookAuth={handleFacebookAuth}
+                  handleGoogleAuth={handleGoogleAuth}
+                  register={!userId}
+                />
+              ) : (
+                <FormInicial />
+              )}
+            </>
           )}
         </Wrapper>
       </div>

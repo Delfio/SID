@@ -1,5 +1,6 @@
 import React from "react";
 import firebase from "../lib/firebase";
+import nookies, { parseCookies } from "nookies";
 
 const AuthContext = React.createContext({});
 
@@ -41,7 +42,7 @@ export const AuthProvider = ({ children }) => {
         .then((usr) => {
           return new Promise((resolv, reject) => {
             if (userId) {
-              if (usr.user.uid === userId) {
+              if (usr.user.uid !== userId) {
                 firebase.auth().signOut();
                 setUser(null);
 
@@ -78,7 +79,7 @@ export const AuthProvider = ({ children }) => {
         .then((usr) => {
           return new Promise((resolv, reject) => {
             if (userId) {
-              if (usr.user.uid === userId) {
+              if (usr.user.uid !== userId) {
                 firebase.auth().signOut();
                 setUser(null);
 
@@ -98,35 +99,45 @@ export const AuthProvider = ({ children }) => {
             });
           });
         })
-        .then((usr) => {
-          setUser(usr);
-        })
         .finally(() => setLoading(false));
     },
     [vincularUserIdAoPin]
   );
 
   const signWithEmailAndPassword = React.useCallback(
-    ({ email, password, userId }) => {
+    ({ email, password, userId="", pin }) => {
       setLoading(true);
       return firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then((usr) => {
-          if (usr.user.uid === userId) {
-            firebase.auth().signOut();
-            setUser(null);
+          return new Promise((resolv, reject) => {
+            if (userId) {
+              if (usr.user.uid !== userId) {
+                firebase.auth().signOut();
+                setUser(null);
 
-            return false;
-          }
-          setUser(usr.user);
-          return true;
+                return reject("usuário não vinculado a este ID");
+              }
+
+              return resolv(usr.user);
+            }
+
+            return vincularUserIdAoPin({
+              idUser: usr.user.uid,
+              pin,
+            }).then((isValid) => {
+              if (!isValid) return reject("PIN inválido"); // isso não é pra acontecer rsrs
+
+              return resolv(usr.user);
+            });
+          });    
         })
         .finally(() => {
           setLoading(false);
         });
     },
-    []
+    [vincularUserIdAoPin]
   );
 
   const registerWithEmailAndPassword = React.useCallback(
@@ -142,9 +153,6 @@ export const AuthProvider = ({ children }) => {
               pin,
             }).then(() => usr.user)
           );
-        })
-        .then((usr) => {
-          setUser(usr);
         })
         .finally(() => setLoading(false));
     },
@@ -162,8 +170,6 @@ export const AuthProvider = ({ children }) => {
       .then((docs) => {
         if (docs.empty) return false;
         const { userId } = docs.docs[0].data();
-
-        console.log(userId);
         // pin registrado porém não atribuido a nenhum usuário
         if (!userId) return true;
 
@@ -174,6 +180,49 @@ export const AuthProvider = ({ children }) => {
       });
   }, []);
 
+  const signOut = React.useCallback(() => {
+    return firebase.auth().signOut();
+  }, []);
+
+  React.useEffect(() => {
+    return firebase.auth().onIdTokenChanged((usr) => {
+      setLoading(true);
+      try {
+        if (!usr) {
+          console.log(usr);
+          setUser(null);
+          nookies.set(undefined, "token", "", {
+            path: "/",
+          });
+
+          return;
+        }
+        const tokenAuth = parseCookies(undefined, ["token"]);
+        if (!tokenAuth?.token) {
+          return usr.getIdToken().then((tk) =>
+            nookies.set(undefined, "token", tk, {
+              path: "/",
+              secure: true,
+              maxAge: 10 * 60 * 4, //4 horas
+            })
+          );
+        }
+      } finally {
+        setLoading(false);
+      }
+    });
+  }, []);
+
+  React.useEffect(() => {
+    const handle = setInterval(async () => {
+      const user = firebase.auth().currentUser;
+      if (user) await user.getIdToken(true);
+    }, 10 * 60 * 1000); // forçar revalidação de 10 em 10 minutos
+
+    // clean up setInterval
+    return () => clearInterval(handle);
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -182,6 +231,7 @@ export const AuthProvider = ({ children }) => {
         signWithEmailAndPassword,
         registerWithEmailAndPassword,
         pinValidate,
+        signOut,
         user,
         loading,
       }}

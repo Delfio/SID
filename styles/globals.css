@@ -58,6 +58,22 @@ a {
   background: url('/img/bg-principal.png') no-repeat center center;
 }
 
+
+.fb {
+  background-color: #3B5998;
+  color: white;
+}
+
+.twitter {
+  background-color: #55ACEE;
+  color: white;
+}
+
+.google {
+  background-color: #dd4b39;
+  color: white;
+}
+
 /* Acessbilidade de fontes */
 @media (max-width: 1080px) {
   html {
