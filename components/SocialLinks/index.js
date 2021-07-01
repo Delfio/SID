@@ -1,12 +1,14 @@
 import React from "react";
 import SocialLinksModules from "./socialLinks.module.css";
 
-export default function SocialLinks() {
+export default function SocialLinks({onGoogleClick, onFacebookClick}) {
+
   return (
     <section className={SocialLinksModules.main}>
       <p>Entre com suas redes sociais</p>
       <div className={SocialLinksModules.socialNetwork}>
-        <a
+        <button
+          onClick={onFacebookClick}
           className={SocialLinksModules.wrapperSocial}
           style={{
             background: "#1354AB",
@@ -14,8 +16,9 @@ export default function SocialLinks() {
           }}
         >
           <i className="fab fa-facebook-f"></i>
-        </a>
-        <a
+        </button>
+        <button
+          onClick={onGoogleClick}
           className={SocialLinksModules.wrapperSocial}
           style={{
             background: "#F65B5B",
@@ -23,7 +26,7 @@ export default function SocialLinks() {
           }}
         >
           <i className="fab fa-google"></i>
-        </a>
+        </button>
       </div>
     </section>
   );

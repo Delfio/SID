@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import SocialCardStyle from "./social_card.module.css";
 import Input from "../../components/Input";
 import { Fab, Action } from "react-tiny-fab";
-import useToast from "../../hooks/Toas";
+import useToast from "../../hooks/useToast";
 
 export default function SocialCard() {
   const [bg, setBg] = React.useState(1);
@@ -198,3 +198,8 @@ export default function SocialCard() {
     </>
   );
 }
+
+
+// export async function getStaticProps(_context) {
+
+// }

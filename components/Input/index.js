@@ -1,23 +1,23 @@
 import React from "react";
 import InputStyle from "./input.module.css";
 
-export default function Input({
+function Input({
   type,
   placehold,
-  value,
-  onBlur,
-  onChange,
   error,
-}) {
+}, ref) {
 
+  const [value, setValue] = React.useState('');
+  
   return (
     <input
       type={type}
       className={InputStyle.main}
       placeholder={placehold}
       value={value}
-      onBlur={onBlur}
-      onChange={(event) => onChange(event.target.value)}
+      ref={ref}
+      onChange={(event) => setValue(event.target.value)}
     />
   );
 }
+export default React.forwardRef(Input);
