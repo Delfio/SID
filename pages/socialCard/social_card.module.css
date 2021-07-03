@@ -19,29 +19,7 @@
   display: none;
 }
 
-.main {
-  /* position: absolute; */
-  width: 100%;
-  height: auto;
 
-  max-height: 100%;
-  max-width: 500px;
-
-  background-size: contain;
-
-  border-radius: 26px;
-  padding: 40px;
-  overflow-y: scroll;
-
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-  -webkit-box-shadow: 5px -2px 5px 3px rgba(0, 0, 0, 0.2);
-  box-shadow: 5px -2px 5px 3px rgba(0, 0, 0, 0.2);
-}
-
-.main::-webkit-scrollbar {
-  display: none;
-}
 
 .WrapperImgProfile {
   display: flex;
@@ -145,12 +123,6 @@
 @media (max-width: 720px) {
   .container {
     padding: 0;
-  }
-
-  .main {
-    border-radius: 0;
-    height: 100%;
-    padding-bottom: 20px;
   }
 }
 

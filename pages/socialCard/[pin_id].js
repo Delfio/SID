@@ -6,21 +6,7 @@ import { Fab, Action } from "react-tiny-fab";
 import useToast from "../../hooks/useToast";
 import { parseCookies } from "nookies";
 import firebase from "../../lib/firebase";
-
-const bgCart = ({ children, bg }) => {
-  return (
-    <div
-      className={SocialCardStyle.main}
-      style={{
-        background: `url('/img/bg-cards/layout${bg}.png') no-repeat center/contain`,
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
-const BgCard = React.memo(bgCart);
+import BgCard from "../../components/BackgroundCard";
 
 export default function SocialCard(props) {
   const [bg, setBg] = React.useState(2);
@@ -37,6 +23,17 @@ export default function SocialCard(props) {
   const [youtube, setYoutube] = React.useState("");
   const [email, setEmail] = React.useState("");
 
+  const [facebookValido, setFacebookValido] = React.useState(true);
+  const [telefoneValido, setTelefoneValido] = React.useState(true);
+  const [instagramValido, setInstagramValido] = React.useState(true);
+  const [whatsappValido, setWhatsappValido] = React.useState(true);
+  const [pixValido, setPixValido] = React.useState(true);
+  const [siteValido, setSiteValido] = React.useState(true);
+  const [tiktokValido, setTikTokValido] = React.useState(true);
+  const [enderecoValido, setEnderecoValido] = React.useState(true);
+  const [youtubeValido, setYoutubeValido] = React.useState(true);
+  const [emailValido, setEmailValido] = React.useState(true);
+
   const router = useRouter();
 
   const { pin_id } = router.query;
@@ -45,22 +42,48 @@ export default function SocialCard(props) {
   const { showToast, handleDevide } = useToast();
 
   const handleSave = React.useCallback(() => {
-    const data = {
-      bg,
-      email,
-      endereco,
-      facebook,
-      instagram,
-      nome,
-      pinId: pin_id,
-      pix,
-      site,
-      telefone,
-      tiktok,
-      userId: uid,
-      whatsapp,
-      youtube,
-    };
+    const data = (() => {
+      const result = {};
+
+      if (facebookValido) {
+        result.facebook = facebook;
+      }
+      if (telefoneValido) {
+        result.telefone = telefone;
+      }
+      if (instagramValido) {
+        result.instagram = instagram;
+      }
+      if (whatsappValido) {
+        result.whatsapp = whatsapp;
+      }
+      if (pixValido) {
+        result.pix = pix;
+      }
+      if (siteValido) {
+        result.site = site;
+      }
+      if (tiktokValido) {
+        result.tiktok = tiktok;
+      }
+      if (enderecoValido) {
+        result.endereco = endereco;
+      }
+      if (youtubeValido) {
+        result.youtube = youtube;
+      }
+      if (emailValido) {
+        result.email = email;
+      }
+
+      return {
+        bg,
+        nome,
+        pinId: pin_id,
+        userId: uid,
+        ...result,
+      };
+    })();
 
     firebase
       .firestore()
@@ -88,20 +111,30 @@ export default function SocialCard(props) {
         });
       });
   }, [
-    bg,
-    email,
-    endereco,
-    facebook,
-    instagram,
-    nome,
     pin_id,
+    uid,
+    facebookValido,
+    telefoneValido,
+    instagramValido,
+    whatsappValido,
+    pixValido,
+    siteValido,
+    tiktokValido,
+    enderecoValido,
+    youtubeValido,
+    emailValido,
+    bg,
+    nome,
+    facebook,
+    telefone,
+    instagram,
+    whatsapp,
     pix,
     site,
-    telefone,
     tiktok,
-    uid,
-    whatsapp,
+    endereco,
     youtube,
+    email,
     showToast,
   ]);
 
@@ -112,19 +145,9 @@ export default function SocialCard(props) {
     });
   }, []);
 
-  React.useEffect(() => {
-    function converterTipoDeDispositivo() {
-      handleDevide({
-        device: navigator.maxTouchPoints,
-      });
-    }
-
-    window.addEventListener("resize", (_) => {
-      converterTipoDeDispositivo();
-    });
-
-    converterTipoDeDispositivo();
-  }, [handleDevide]);
+  const handleExibirCartao = React.useCallback(() => {
+    router.push(`/card/${pin_id}`);
+  }, [router, pin_id]);
 
   const handleChangeData = React.useCallback((data) => {
     const {
@@ -209,7 +232,72 @@ export default function SocialCard(props) {
     }
   }, []);
 
-  // const handleLinksBlur = React.useCallback(() => {}, []);
+  React.useEffect(() => {
+    function converterTipoDeDispositivo() {
+      handleDevide({
+        device: navigator.maxTouchPoints,
+      });
+    }
+
+    window.addEventListener("resize", (_) => {
+      converterTipoDeDispositivo();
+    });
+
+    converterTipoDeDispositivo();
+  }, [handleDevide]);
+
+  const handleLinksBlur = React.useCallback(
+    (e, type) => {
+      if(!e) return true;
+
+      const re =
+        /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm;
+      const linkIsValid = re.test(e);
+
+      if (!linkIsValid) {
+        showToast({
+          type: "error",
+          message: `Link do ${type} com formato inválido!`,
+        });
+
+        return false;
+      }
+    },
+    [showToast]
+  );
+
+  const handleEmailBlur = React.useCallback(
+    (e) => {
+      setEmailValido(true);
+      const re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      const emailIsValid = re.test(e);
+      if (!emailIsValid) {
+        showToast({
+          type: "error",
+          message: "Email inválido !",
+        });
+
+        setEmailValido(false);
+      }
+    },
+    [showToast]
+  );
+
+  const handlePhoneBlur = React.useCallback(
+    (ph, type) => {
+      const isValidNumber = String(ph.trim());
+      if (isNaN(isValidNumber)) {
+        showToast({
+          type: "error",
+          message: `Insira somente números no campo de ${type}`,
+        });
+
+        return false;
+      }
+    },
+    [showToast]
+  );
 
   React.useEffect(() => {
     firebase
@@ -264,6 +352,15 @@ export default function SocialCard(props) {
           >
             <i className="fas fa-copy"></i>
           </Action>
+          <Action
+            style={{
+              backgroundColor: "#00A2DC",
+            }}
+            text="Ver cartão"
+            onClick={handleExibirCartao}
+          >
+            <i className="fas fa-copy"></i>
+          </Action>
         </Fab>
         <BgCard bg={bg}>
           <section className={SocialCardStyle.WrapperImgProfile}>
@@ -294,6 +391,12 @@ export default function SocialCard(props) {
               <input
                 type="text"
                 value={facebook}
+                onBlur={(e) => {
+                  setFacebookValido(true);
+                  if (!handleLinksBlur(e.target.value, 'Facebook')) {
+                    setFacebookValido(false);
+                  }
+                }}
                 onChange={(e) => setFacebook(e.target.value)}
                 className="form-control"
                 placeholder="Facebook"
@@ -302,8 +405,9 @@ export default function SocialCard(props) {
             </div>
             <div className="input-group mb-3">
               <input
-                type="text"
+                type="number"
                 value={telefone}
+                onBlur={(e) => handlePhoneBlur(e.target.value)}
                 onChange={(e) => setTelefone(e.target.value)}
                 className="form-control"
                 placeholder="Telefone"
@@ -314,6 +418,12 @@ export default function SocialCard(props) {
               <input
                 type="text"
                 value={instagram}
+                onBlur={(e) => {
+                  setInstagramValido(true);
+                  if(!handleLinksBlur(e.target.value, 'Instagram')) {
+                    setInstagramValido(false);
+                  }
+                }}
                 onChange={(e) => setInstagram(e.target.value)}
                 className="form-control"
                 placeholder="Instagram"
@@ -322,8 +432,9 @@ export default function SocialCard(props) {
             </div>
             <div className="input-group mb-3">
               <input
-                type="text"
+                type="number"
                 value={whatsapp}
+                onBlur={(e) => handlePhoneBlur(e.target.value)}
                 onChange={(e) => setWhatsapp(e.target.value)}
                 className="form-control"
                 placeholder="Whatsapp"
@@ -344,6 +455,12 @@ export default function SocialCard(props) {
               <input
                 type="text"
                 value={site}
+                onBlur={(e) => {
+                  setEmailValido(true)
+                  if(!handleLinksBlur(e.target.value, 'Site')) {
+                    setEmailValido(false)
+                  }
+                }}
                 onChange={(e) => setSite(e.target.value)}
                 className="form-control"
                 placeholder="Site"
@@ -354,6 +471,12 @@ export default function SocialCard(props) {
               <input
                 type="text"
                 value={tiktok}
+                onBlur={(e) => {
+                  setTelefoneValido(true);
+                  if(!handleLinksBlur(e.target.value, 'Tik Tok')) {
+                    setTikTokValido(false);
+                  }
+                }}
                 onChange={(e) => setTikTok(e.target.value)}
                 className="form-control"
                 placeholder="Tik Tok"
@@ -364,9 +487,15 @@ export default function SocialCard(props) {
               <input
                 type="text"
                 value={endereco}
+                onBlur={(e) => {
+                  setEnderecoValido(true)
+                  if(!handleLinksBlur(e.target.value, 'Endereço')) {
+                    setEnderecoValido(false);
+                  }
+                }}
                 onChange={(e) => setEndereco(e.target.value)}
                 className="form-control"
-                placeholder="Endereço"
+                placeholder="Endereço (google maps)"
                 aria-label="Endereço"
               />
             </div>
@@ -374,9 +503,15 @@ export default function SocialCard(props) {
               <input
                 type="text"
                 value={youtube}
+                onBlur={(e) => {
+                  setYoutubeValido(true)
+                  if(!handleLinksBlur(e.target.value, 'Youtube')) {
+                    setYoutubeValido(false) 
+                  }
+                }}
                 onChange={(e) => setYoutube(e.target.value)}
                 className="form-control"
-                placeholder="Youtube"
+                placeholder="Link Youtube"
                 aria-label="Youtube"
               />
             </div>
@@ -384,6 +519,7 @@ export default function SocialCard(props) {
               <input
                 type="text"
                 value={email}
+                onBlur={(e) => handleEmailBlur(e.target.value)}
                 onChange={(e) => setEmail(e.target.value)}
                 className="form-control"
                 placeholder="Email"
@@ -413,7 +549,7 @@ export async function getServerSideProps(ctx) {
     const invalidOperation = () => {
       return {
         redirect: {
-          destination: "/sorry",
+          destination: "/",
           permanent: false,
         },
       };
