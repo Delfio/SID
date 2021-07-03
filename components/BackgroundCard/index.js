@@ -6,7 +6,7 @@ const bgCart = ({ children, bg }) => {
     <div
       className={SocialCardStyle.main}
       style={{
-        background: `url('/img/bg-cards/layout${bg}.png') no-repeat center/contain`,
+        background: `url('/img/bg-cards/layout${bg}.png') no-repeat center/cover`,
       }}
     >
       {children}
