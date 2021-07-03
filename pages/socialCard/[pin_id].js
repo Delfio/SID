@@ -2,33 +2,114 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import SocialCardStyle from "./social_card.module.css";
-import Input from "../../components/Input";
 import { Fab, Action } from "react-tiny-fab";
 import useToast from "../../hooks/useToast";
+import { parseCookies } from "nookies";
+import firebase from "../../lib/firebase";
 
-export default function SocialCard() {
-  const [bg, setBg] = React.useState(1);
+const bgCart = ({ children, bg }) => {
+  return (
+    <div
+      className={SocialCardStyle.main}
+      style={{
+        background: `url('/img/bg-cards/layout${bg}.png') no-repeat center/contain`,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+const BgCard = React.memo(bgCart);
+
+export default function SocialCard(props) {
+  const [bg, setBg] = React.useState(2);
+
+  const [nome, setNome] = React.useState("");
+  const [facebook, setFacebook] = React.useState("");
+  const [telefone, setTelefone] = React.useState("");
+  const [instagram, setInstagram] = React.useState("");
+  const [whatsapp, setWhatsapp] = React.useState("");
+  const [pix, setPix] = React.useState("");
+  const [site, setSite] = React.useState("");
+  const [tiktok, setTikTok] = React.useState("");
+  const [endereco, setEndereco] = React.useState("");
+  const [youtube, setYoutube] = React.useState("");
+  const [email, setEmail] = React.useState("");
 
   const router = useRouter();
-  
-  const { user_id } = router.query;
+
+  const { pin_id } = router.query;
+  const { uid } = props.user;
 
   const { showToast, handleDevide } = useToast();
 
   const handleSave = React.useCallback(() => {
-    showToast({
-      type: "success",
-      message: "perfil salvo com suucesso",
-    });
+    const data = {
+      bg,
+      email,
+      endereco,
+      facebook,
+      instagram,
+      nome,
+      pinId: pin_id,
+      pix,
+      site,
+      telefone,
+      tiktok,
+      userId: uid,
+      whatsapp,
+      youtube,
+    };
 
-    router.push("/card/useridlllaopoomskdlmjfi");
-  }, [showToast, router]);
+    firebase
+      .firestore()
+      .collection("perfis")
+      .where("pinId", "==", pin_id)
+      .where("userId", "==", uid)
+      .get()
+      .then((perfil) => {
+        if (perfil.empty) {
+          return firebase.firestore().collection("perfis").doc().set(data);
+        }
+
+        return perfil.docs[0].ref.update(data);
+      })
+      .then((_) => {
+        showToast({
+          type: "success",
+          message: "perfil salvo com sucesso",
+        });
+      })
+      .catch((err) => {
+        showToast({
+          type: "error",
+          message: "Ocorreu um erro ao registrar suas alterações!",
+        });
+      });
+  }, [
+    bg,
+    email,
+    endereco,
+    facebook,
+    instagram,
+    nome,
+    pin_id,
+    pix,
+    site,
+    telefone,
+    tiktok,
+    uid,
+    whatsapp,
+    youtube,
+    showToast,
+  ]);
 
   const handleAlterBG = React.useCallback(() => {
-    setBg(oldBg => {
-      if(oldBg === 6) return 1;
+    setBg((oldBg) => {
+      if (oldBg === 6) return 1;
       return oldBg + 1;
-    })
+    });
   }, []);
 
   React.useEffect(() => {
@@ -44,6 +125,123 @@ export default function SocialCard() {
 
     converterTipoDeDispositivo();
   }, [handleDevide]);
+
+  const handleChangeData = React.useCallback((data) => {
+    const {
+      email,
+      endereco,
+      facebook,
+      instagram,
+      nome,
+      pix,
+      site,
+      telefone,
+      tiktok,
+      whatsapp,
+      youtube,
+      bg,
+    } = data;
+
+    if (facebook) {
+      setFacebook(facebook);
+    } else {
+      setFacebook("");
+    }
+
+    if (instagram) {
+      setInstagram(instagram);
+    } else {
+      setInstagram("");
+    }
+
+    if (nome) {
+      setNome(nome);
+    } else {
+      setNome("");
+    }
+    if (pix) {
+      setPix(pix);
+    } else {
+      setPix("");
+    }
+    if (site) {
+      setSite(site);
+    } else {
+      setSite("");
+    }
+    if (telefone) {
+      setTelefone(telefone);
+    } else {
+      setTelefone("");
+    }
+    if (tiktok) {
+      setTikTok(tiktok);
+    } else {
+      setTikTok("");
+    }
+    if (whatsapp) {
+      setWhatsapp(whatsapp);
+    } else {
+      setWhatsapp("");
+    }
+
+    if (youtube) {
+      setYoutube(youtube);
+    } else {
+      setYoutube("");
+    }
+
+    if (email) {
+      setEmail(email);
+    } else {
+      setEmail("");
+    }
+    if (endereco) {
+      setEndereco(endereco);
+    } else {
+      setEndereco("");
+    }
+
+    if (bg) {
+      setBg(bg);
+    } else {
+      setBg(1);
+    }
+  }, []);
+
+  // const handleLinksBlur = React.useCallback(() => {}, []);
+
+  React.useEffect(() => {
+    firebase
+      .firestore()
+      .collection("pins")
+      .where("pinId", "==", pin_id)
+      .where("userId", "==", uid)
+      .get()
+      .then((profile) => {
+        if (profile.empty) {
+          showToast({
+            type: "error",
+            message: "Pin não registrado!",
+          });
+
+          router.push("/sorry");
+        }
+      });
+
+    const handler = firebase
+      .firestore()
+      .collection("perfis")
+      .where("pinId", "==", pin_id)
+      .where("userId", "==", uid)
+      .onSnapshot((observer) => {
+        if (observer.empty) return;
+
+        handleChangeData(observer.docs[0].data());
+      });
+
+    return () => handler;
+  }, [pin_id, uid, handleChangeData, showToast, router]);
 
   return (
     <>
@@ -67,10 +265,7 @@ export default function SocialCard() {
             <i className="fas fa-copy"></i>
           </Action>
         </Fab>
-        <div className={SocialCardStyle.main} style={{
-          background: `url('/img/bg-cards/layout${bg}.png') no-repeat`,
-          backgroundSize: 'contain'
-        }}>
+        <BgCard bg={bg}>
           <section className={SocialCardStyle.WrapperImgProfile}>
             <div className={SocialCardStyle.ContainerImgProfile}>
               <Image
@@ -83,19 +278,23 @@ export default function SocialCard() {
             </div>
           </section>
           <section className={SocialCardStyle.ContainerName}>
-            <Input
-              value="Delfio Francisco"
-              error={false}
-              onBlur={() => {}}
-              placehold="Seu nome"
-              type="text"
-              onChange={() => {}}
-            />
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                className="form-control"
+                placeholder="Nome do cartão"
+                aria-label="Nome do cartão"
+              />
+            </div>
           </section>
           <section className={SocialCardStyle.ContainerInfos}>
             <div className="input-group mb-3">
               <input
                 type="text"
+                value={facebook}
+                onChange={(e) => setFacebook(e.target.value)}
                 className="form-control"
                 placeholder="Facebook"
                 aria-label="Facebook"
@@ -104,6 +303,8 @@ export default function SocialCard() {
             <div className="input-group mb-3">
               <input
                 type="text"
+                value={telefone}
+                onChange={(e) => setTelefone(e.target.value)}
                 className="form-control"
                 placeholder="Telefone"
                 aria-label="Telfone"
@@ -112,6 +313,8 @@ export default function SocialCard() {
             <div className="input-group mb-3">
               <input
                 type="text"
+                value={instagram}
+                onChange={(e) => setInstagram(e.target.value)}
                 className="form-control"
                 placeholder="Instagram"
                 aria-label="Instagram"
@@ -120,6 +323,8 @@ export default function SocialCard() {
             <div className="input-group mb-3">
               <input
                 type="text"
+                value={whatsapp}
+                onChange={(e) => setWhatsapp(e.target.value)}
                 className="form-control"
                 placeholder="Whatsapp"
                 aria-label="Whatsapp"
@@ -128,6 +333,8 @@ export default function SocialCard() {
             <div className="input-group mb-3">
               <input
                 type="text"
+                value={pix}
+                onChange={(e) => setPix(e.target.value)}
                 className="form-control"
                 placeholder="Pix"
                 aria-label="Pix"
@@ -136,6 +343,8 @@ export default function SocialCard() {
             <div className="input-group mb-3">
               <input
                 type="text"
+                value={site}
+                onChange={(e) => setSite(e.target.value)}
                 className="form-control"
                 placeholder="Site"
                 aria-label="Site"
@@ -144,14 +353,8 @@ export default function SocialCard() {
             <div className="input-group mb-3">
               <input
                 type="text"
-                className="form-control"
-                placeholder="Nosso Site"
-                aria-label="Nosso Site"
-              />
-            </div>
-            <div className="input-group mb-3">
-              <input
-                type="text"
+                value={tiktok}
+                onChange={(e) => setTikTok(e.target.value)}
                 className="form-control"
                 placeholder="Tik Tok"
                 aria-label="Tik Tok"
@@ -160,6 +363,8 @@ export default function SocialCard() {
             <div className="input-group mb-3">
               <input
                 type="text"
+                value={endereco}
+                onChange={(e) => setEndereco(e.target.value)}
                 className="form-control"
                 placeholder="Endereço"
                 aria-label="Endereço"
@@ -168,6 +373,8 @@ export default function SocialCard() {
             <div className="input-group mb-3">
               <input
                 type="text"
+                value={youtube}
+                onChange={(e) => setYoutube(e.target.value)}
                 className="form-control"
                 placeholder="Youtube"
                 aria-label="Youtube"
@@ -176,6 +383,8 @@ export default function SocialCard() {
             <div className="input-group mb-3">
               <input
                 type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="form-control"
                 placeholder="Email"
                 aria-label="Email"
@@ -193,13 +402,40 @@ export default function SocialCard() {
               </button>
             </div>
           </section>
-        </div>
+        </BgCard>
       </main>
     </>
   );
 }
 
+export async function getServerSideProps(ctx) {
+  try {
+    const invalidOperation = () => {
+      return {
+        redirect: {
+          destination: "/sorry",
+          permanent: false,
+        },
+      };
+    };
 
-// export async function getStaticProps(_context) {
+    const cookies = parseCookies(ctx);
 
-// }
+    if (!cookies?.token) {
+      return invalidOperation();
+    }
+
+    const { token } = cookies;
+
+    return {
+      props: {
+        user: JSON.parse(token),
+      },
+    };
+  } catch (err) {
+    console.log("erroo ", err);
+    ctx.res.writeHead(302, { Location: "/sory" });
+    ctx.res.end();
+    return { props: {} };
+  }
+}

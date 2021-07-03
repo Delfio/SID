@@ -4,11 +4,16 @@ import InputStyle from "./input.module.css";
 function Input({
   type,
   placehold,
+  initialValue='',
   error,
 }, ref) {
 
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = React.useState(initialValue);
   
+  React.useEffect(() => {
+    console.log(value);
+  }, [value]);
+
   return (
     <input
       type={type}

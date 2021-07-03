@@ -105,7 +105,7 @@ export const AuthProvider = ({ children }) => {
   );
 
   const signWithEmailAndPassword = React.useCallback(
-    ({ email, password, userId="", pin }) => {
+    ({ email, password, userId = "", pin }) => {
       setLoading(true);
       return firebase
         .auth()
@@ -131,7 +131,7 @@ export const AuthProvider = ({ children }) => {
 
               return resolv(usr.user);
             });
-          });    
+          });
         })
         .finally(() => {
           setLoading(false);
@@ -187,6 +187,7 @@ export const AuthProvider = ({ children }) => {
   React.useEffect(() => {
     return firebase.auth().onIdTokenChanged((usr) => {
       setLoading(true);
+
       try {
         if (!usr) {
           console.log(usr);
@@ -199,13 +200,11 @@ export const AuthProvider = ({ children }) => {
         }
         const tokenAuth = parseCookies(undefined, ["token"]);
         if (!tokenAuth?.token) {
-          return usr.getIdToken().then((tk) =>
-            nookies.set(undefined, "token", tk, {
-              path: "/",
-              secure: true,
-              maxAge: 10 * 60 * 4, //4 horas
-            })
-          );
+          return nookies.set(undefined, "token", JSON.stringify(usr), {
+            path: "/",
+            secure: true,
+            maxAge: 10 * 60 * 4, //4 horas
+          });
         }
       } finally {
         setLoading(false);

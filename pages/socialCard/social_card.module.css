@@ -27,7 +27,8 @@
   max-height: 100%;
   max-width: 500px;
 
-  background-color: white;
+  background-size: contain;
+
   border-radius: 26px;
   padding: 40px;
   overflow-y: scroll;
@@ -74,8 +75,12 @@
 .ContainerName input {
   font-size: 1.8rem;
   font-weight: bold;
-  color: white !important;
+  color: rgb(36, 36, 36) !important;
   text-align: center !important;
+}
+
+.ContainerName input::placeholder {
+  color: gray;
 }
 
 .ContainerName h2 {

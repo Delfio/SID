@@ -5,9 +5,9 @@ import { useRouter } from "next/router";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Wrapper from "../components/Wrapper";
-import SocialLinks from "../components/SocialLinks";
 import useToast from "../hooks/useToast";
 import useAuth from "../hooks/useAuth";
+
 
 const FormLoginInputs = ({
   handleLogin,
@@ -52,7 +52,6 @@ const FormLoginInputs = ({
         password,
       });
 
-      console.log(sucess);
       if (sucess) {
         if (remenberCredentials && email && password) {
           localStorage.setItem(
@@ -206,8 +205,6 @@ export default function Home() {
     return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   }, []);
 
-  const router = useRouter();
-
   const {
     loading,
     signWithEmailAndPassword,
@@ -216,6 +213,7 @@ export default function Home() {
     siginWithFacebook,
     pinValidate,
   } = useAuth();
+  const router = useRouter();
 
   const { showToast, handleDevide } = useToast();
   async function handleValidatePin() {
@@ -280,7 +278,7 @@ export default function Home() {
         pin: pinUsuario,
       })
         .then((_) => {
-          console.log("logado com sucesso e vinculado");
+          router.push(`socialCard/${pinUsuario}`)
           return true;
         })
         .catch((err) => {
@@ -293,7 +291,7 @@ export default function Home() {
           return false;
         });
     },
-    [pinUsuario, reEmailValidate, showToast, signWithEmailAndPassword, userId]
+    [pinUsuario, reEmailValidate, router, showToast, signWithEmailAndPassword, userId]
   );
 
   const handleRegister = React.useCallback(
@@ -332,6 +330,7 @@ export default function Home() {
       })
         .then((isValid) => {
           console.log("registrado e vinculado");
+          router.push(`socialCard/${pinUsuario}`)
           return true;
         })
         .catch((err) => {
@@ -353,7 +352,7 @@ export default function Home() {
           return false;
         });
     },
-    [pinUsuario, reEmailValidate, registerWithEmailAndPassword, showToast]
+    [pinUsuario, reEmailValidate, registerWithEmailAndPassword, router, showToast]
   );
 
   const handleGoogleAuth = React.useCallback(() => {
@@ -362,7 +361,7 @@ export default function Home() {
       pin: pinUsuario,
     })
       .then((_) => {
-        console.log("logado com sucesso e vinculado");
+        router.push(`socialCard/${pinUsuario}`)
         return true;
       })
       .catch((err) => {
@@ -374,7 +373,7 @@ export default function Home() {
 
         return false;
       });
-  }, [siginWithGoogle, userId, pinUsuario, showToast]);
+  }, [siginWithGoogle, userId, pinUsuario, router, showToast]);
 
   const handleFacebookAuth = React.useCallback(() => {
     siginWithFacebook({
@@ -382,7 +381,7 @@ export default function Home() {
       pin: pinUsuario,
     })
       .then((_) => {
-        console.log("logado com sucesso e vinculado");
+        router.push(`socialCard/${pinUsuario}`)
         return true;
       })
       .catch((err) => {
@@ -393,7 +392,7 @@ export default function Home() {
 
         return false;
       });
-  }, [siginWithFacebook, userId, pinUsuario, showToast]);
+  }, [siginWithFacebook, userId, pinUsuario, router, showToast]);
 
   const FormInicial = () => {
     return (
