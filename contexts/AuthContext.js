@@ -190,7 +190,6 @@ export const AuthProvider = ({ children }) => {
 
       try {
         if (!usr) {
-          console.log(usr);
           setUser(null);
           nookies.set(undefined, "token", "", {
             path: "/",

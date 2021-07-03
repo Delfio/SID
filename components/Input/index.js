@@ -9,11 +9,6 @@ function Input({
 }, ref) {
 
   const [value, setValue] = React.useState(initialValue);
-  
-  React.useEffect(() => {
-    console.log(value);
-  }, [value]);
-
   return (
     <input
       type={type}

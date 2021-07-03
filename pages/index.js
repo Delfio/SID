@@ -329,7 +329,6 @@ export default function Home() {
         pin: pinUsuario,
       })
         .then((isValid) => {
-          console.log("registrado e vinculado");
           router.push(`socialCard/${pinUsuario}`)
           return true;
         })
@@ -365,7 +364,7 @@ export default function Home() {
         return true;
       })
       .catch((err) => {
-        console.log("asdfasdfse ", err);
+        console.log("error ", err);
         showToast({
           type: "error",
           message: err,
