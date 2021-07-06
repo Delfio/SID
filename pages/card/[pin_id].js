@@ -55,7 +55,7 @@ export default function Card(props) {
                   <i
                     className="fab fa-facebook-square"
                     style={{
-                      color: "gray",
+                      color: "#1354AB",
                     }}
                   ></i>
                 </div>
@@ -90,7 +90,7 @@ export default function Card(props) {
                   <i
                     className="fab fa-instagram"
                     style={{
-                      color: "gray",
+                      color: "#E1306C",
                     }}
                   ></i>
                 </div>
@@ -109,7 +109,7 @@ export default function Card(props) {
                   <i
                     className="fab fa-whatsapp"
                     style={{
-                      color: "gray",
+                      color: "#075e54",
                     }}
                   ></i>
                 </div>
@@ -250,15 +250,15 @@ export default function Card(props) {
           )}
         </section>
         <section className={CardStyle.wrapperLogoSid}>
-          <div className={CardStyle.logoImg}>
+          <a href="https://www.sejasid.com" target="_blank" className={CardStyle.logoImg} rel="noreferrer">
             <Image
               src="/img/logo.png"
               alt="logo"
               // className="rounded mx-auto d-block"
-              width="auto"
-              height="auto"
+              width="100%"
+              height="100%"
             />
-          </div>
+          </a>
         </section>
       </BgCard>
     </main>
