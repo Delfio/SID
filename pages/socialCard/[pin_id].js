@@ -7,6 +7,7 @@ import useToast from "../../hooks/useToast";
 import { parseCookies } from "nookies";
 import firebase from "../../lib/firebase";
 import BgCard from "../../components/BackgroundCard";
+import Head from 'next/head';
 
 export default function SocialCard(props) {
   const [bg, setBg] = React.useState(2);
@@ -411,6 +412,9 @@ export default function SocialCard(props) {
 
   return (
     <>
+      <Head>
+        <title>Edite seu cartão</title>
+      </Head>
       <main className={SocialCardStyle.container}>
         <Fab
           style={{ bottom: 0, right: 0 }}
