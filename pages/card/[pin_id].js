@@ -30,7 +30,7 @@ export default function Card(props) {
   return (
     <>
       <Head>
-        <title>{nome} - SEJA SID</title>
+        <title>{nome} - SEJA SID.com</title>
         <meta property="og:url" content="www.seja-sid.com" />
         <meta property="og:type" content="website" />
         <meta property="fb:app_id" content="your fb id" />
