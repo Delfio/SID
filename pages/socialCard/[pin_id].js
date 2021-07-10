@@ -364,6 +364,7 @@ export default function SocialCard(props) {
     [showToast]
   );
 
+
   React.useEffect(() => {
     firebase
       .firestore()

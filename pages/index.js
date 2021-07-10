@@ -14,7 +14,8 @@ const FormLoginInputs = ({
   handleRegister,
   handleFacebookAuth,
   handleGoogleAuth,
-  handleForgotPassword,
+  handleAlterPin,
+  pin,
   register = false,
 }) => {
   const [email, setEmail] = React.useState("");
@@ -118,6 +119,7 @@ const FormLoginInputs = ({
         textAlign: "left",
       }}
     >
+      <p style={{textAlign: 'center'}}>Pin: <strong>{pin}</strong></p>
       <div className="form-group mb-3">
         <label htmlFor="email">Endereço de email:</label>
         <input
@@ -175,16 +177,25 @@ const FormLoginInputs = ({
         </button>
         <section
           style={{
-            padding: 20,
-            textAlign: "center",
+            padding: '20px 0 20px',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
           }}
         >
+          <a
+            className="forgot text-muted"
+            target="_blank"
+            href={`https://api.whatsapp.com/send?phone=556992116549&text=Ol%C3%A1%2C%20vim%20a%20partir%20do%20cart%C3%A3o.seja-sid.com.%20Esqueci%20a%20senha%20da%20minha%20conta%20-%20referente%20ao%20pin-${pin}`} rel="noreferrer"
+          >
+            Esqueceu sua senha?
+          </a>
           <button
-            onClick={handleForgotPassword}
+            onClick={handleAlterPin}
             className="forgot text-muted"
             href="#"
           >
-            Esqueceu sua senha?
+            Entrar com outro pin
           </button>
         </section>
       </div>
@@ -216,8 +227,22 @@ export default function Home() {
   const router = useRouter();
 
   const { showToast, handleDevide } = useToast();
-  async function handleValidatePin() {
-    const pin = inputPinREF.current?.value;
+
+  const handleAlterPin = React.useCallback(() => {
+    setPinUsuario("")
+    setPinValido(false)
+  }, []);
+
+  const saveTokenInLocalStorage = React.useCallback((e) => {
+    localStorage.setItem('@seja-sid-token', e);
+  }, []);
+
+  const handleValidatePin = React.useCallback(async (e) => {
+    const pin = (() => {
+      if(e) return e;
+      return inputPinREF.current?.value
+    })();
+
     setPinError(false);
 
     if (!pin) {
@@ -244,9 +269,10 @@ export default function Home() {
 
       setPinValido(true);
       setPinUsuario(pin);
+      saveTokenInLocalStorage(pin)
       return;
     });
-  }
+  }, [pinValidate, showToast, saveTokenInLocalStorage]);
 
   const handleLogin = React.useCallback(
     ({ email, password }) => {
@@ -393,6 +419,13 @@ export default function Home() {
       });
   }, [siginWithFacebook, userId, pinUsuario, router, showToast]);
 
+  const getLastToken = React.useCallback(() => {
+    const localToken = localStorage.getItem('@seja-sid-token');
+    if(localToken) {
+      handleValidatePin(localToken);
+    }
+  }, [handleValidatePin]);
+
   const FormInicial = () => {
     return (
       <>
@@ -421,6 +454,10 @@ export default function Home() {
     converterTipoDeDispositivo();
   }, [handleDevide]);
 
+  React.useLayoutEffect(() => {
+    getLastToken();
+  }, [getLastToken])
+
   return (
     <div>
       <Head>
@@ -442,6 +479,9 @@ export default function Home() {
                   handleRegister={handleRegister}
                   handleFacebookAuth={handleFacebookAuth}
                   handleGoogleAuth={handleGoogleAuth}
+                  handleAlterPin={handleAlterPin}
+                  pin={pinUsuario}
+
                   register={!userId}
                 />
               ) : (
