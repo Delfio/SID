@@ -238,10 +238,17 @@ export default function Home() {
   }, []);
 
   const handleValidatePin = React.useCallback(async (e) => {
-    const pin = (() => {
-      if(e) return e;
-      return inputPinREF.current?.value
-    })();
+
+    const pin = inputPinREF.current?.value
+
+    if(!pin || String(pin).length <= 0 ) {
+      showToast({
+        type: "error",
+        message: "código pin inválido",
+      });
+
+      return;
+    }
 
     setPinError(false);
 
@@ -271,7 +278,7 @@ export default function Home() {
       setPinUsuario(pin);
       saveTokenInLocalStorage(pin)
       return;
-    });
+    }).catch(err => console.log(err))
   }, [pinValidate, showToast, saveTokenInLocalStorage]);
 
   const handleLogin = React.useCallback(
@@ -431,7 +438,7 @@ export default function Home() {
       <>
         <Input
           error={pinError}
-          onChange={(e) => setPinId(e)}
+          onChange={(e) => setPinId(e.target.value)}
           ref={inputPinREF}
           placehold="Pin"
         />
